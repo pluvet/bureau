@@ -1,10 +1,5 @@
 version: '3'
-
 services:
-  bureau-app:
-    build: .
-    ports:
-      - 8500:80
 
   mongodb:
     image: mongo
@@ -24,10 +19,21 @@ services:
     environment:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=123456
-      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_SERVER=mongodb  
 
-  #  command: rq worker --with-scheduler
-  
+  mock-app:
+    image: mockoon-test
+    ports:
+      - 7900:3001
+    command: mockoon-cli start --data ./dat.json
+    
+  bureau-app-try:
+    build: .
+    ports:
+      - 8500:80
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
 
 volumes:
   mongo-data:
